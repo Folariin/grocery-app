@@ -1,0 +1,11 @@
+**/node_modules/
+**/target/
+**/.idea/
+**/Open Notebook.onetoc2
+**/.env
+**/.env.*
+*.log
+**/dist/
+**/build/
+.DS_Store
+Thumbs.db
