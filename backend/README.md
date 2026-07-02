@@ -1,265 +1,124 @@
-﻿# 🛒 Grocery Household App — Backend
+# Grocery Household App Backend
 
-A RESTful backend API for a shared grocery list application.  
-Users can create households, collaborate on grocery lists, invite others to join, and track purchased items.
+A RESTful Spring Boot API for a shared grocery list application. Users can create households, collaborate on grocery lists, invite others to join, and track purchased items.
 
-Built with **Spring Boot**, **JWT authentication**, and **PostgreSQL**.
-
----
-
-## ✨ Features
-
-### 🔐 Authentication & Security
-- User signup and login
-- JWT-based authentication
-- Stateless backend (no server-side sessions)
-- Protected endpoints using Spring Security
-
----
-
-### 🏠 Households
-- Create households
-- View households a user belongs to
-- Role-based membership:
-    - `OWNER`
-    - `MEMBER`
-- Only owners can invite new members
-
----
-
-### 📋 Grocery Lists
-- Create multiple grocery lists per household
-- View all lists within a household
-- Lists are shared among all household members
-
----
-
-### 🧾 List Items
-- Add items to a grocery list
-- Specify quantity, unit, and optional notes
-- Mark items as purchased or unpurchased
-- Track:
-    - who purchased an item
-    - when it was purchased
-- Soft-delete items using status flags
-
----
-
-### ✉️ Invitations
-- Household owners can invite users by email
-- Invitations are stored server-side with secure tokens
-- Invited users can:
-    - view pending invitations
-    - accept invitations to join households
-- Invitation tokens are single-use and validated on acceptance
-
-> Email delivery is **not implemented**.  
-> Invited users see invitations after signing up and logging in with the invited email.
-
----
-
-## 🛠 Tech Stack
-
-- Java 17+
-- Spring Boot
-- Spring Security
-- JPA / Hibernate
-- PostgreSQL
-- JWT (JSON Web Tokens)
-
----
-
-## 📡 API Endpoints
-
-### Authentication
-| Method | Endpoint | Description |
-|------|--------|------------|
-| POST | `/api/auth/signup` | Create a new user |
-| POST | `/api/auth/login` | Login and receive JWT |
-
----
-
-### Households
-| Method | Endpoint | Description |
-|------|--------|------------|
-| GET | `/api/households` | List households for current user |
-| POST | `/api/households` | Create a household |
-
----
-
-### Grocery Lists
-| Method | Endpoint | Description |
-|------|--------|------------|
-| GET | `/api/households/{householdId}/lists` | List grocery lists |
-| POST | `/api/households/{householdId}/lists` | Create a grocery list |
-
----
-
-### List Items
-| Method | Endpoint | Description |
-|------|--------|------------|
-| GET | `/api/lists/{listId}/items` | Get items in a list |
-| POST | `/api/lists/{listId}/items` | Add an item |
-| PATCH | `/api/list-items/{itemId}/purchase` | Mark purchased / unpurchased |
-| DELETE | `/api/list-items/{itemId}` | Remove item (soft delete) |
-
----
-
-### Invitations
-| Method | Endpoint | Description |
-|------|--------|------------|
-| POST | `/api/households/{householdId}/invites` | Create invite (OWNER only) |
-| GET | `/api/invites` | View pending invites |
-| POST | `/api/invites/{token}/accept` | Accept invite |
-
----
-
-## Authentication Details
-
-- JWT is returned on signup and login
-- All protected endpoints require the header: # 🛒 Grocery Household App — Backend
-
-A RESTful backend API for a shared grocery list application.  
-Users can create households, collaborate on grocery lists, invite others to join, and track purchased items.
-
-Built with **Spring Boot**, **JWT authentication**, and **PostgreSQL**.
-
----
+Built with Spring Boot, JWT authentication, and PostgreSQL.
 
 ## Features
 
-### Authentication & Security
+### Authentication and security
+
 - User signup and login
 - JWT-based authentication
-- Stateless backend (no server-side sessions)
+- Stateless backend with no server-side sessions
 - Protected endpoints using Spring Security
 
----
-
 ### Households
+
 - Create households
 - View households a user belongs to
 - Role-based membership:
-    - `OWNER`
-    - `MEMBER`
+  - `OWNER`
+  - `MEMBER`
 - Only owners can invite new members
 
----
+### Grocery lists
 
-### Grocery Lists
 - Create multiple grocery lists per household
 - View all lists within a household
-- Lists are shared among all household members
+- Share lists among all household members
 
----
+### List items
 
-### List Items
 - Add items to a grocery list
 - Specify quantity, unit, and optional notes
 - Mark items as purchased or unpurchased
-- Track:
-    - who purchased an item
-    - when it was purchased
+- Track who purchased an item and when it was purchased
 - Soft-delete items using status flags
 
----
+### Invitations
 
-###  Invitations
 - Household owners can invite users by email
 - Invitations are stored server-side with secure tokens
-- Invited users can:
-    - view pending invitations
-    - accept invitations to join households
+- Invited users can view pending invitations and accept them
 - Invitation tokens are single-use and validated on acceptance
 
-> Email delivery is **not implemented**.  
-> Invited users see invitations after signing up and logging in with the invited email.
+Email delivery is not implemented. Invited users see invitations after signing up and logging in with the invited email.
 
----
+## Tech stack
 
-## 🛠 Tech Stack
-
-- Java 17+
+- Java 21
 - Spring Boot
 - Spring Security
 - JPA / Hibernate
 - PostgreSQL
-- JWT (JSON Web Tokens)
+- JWT
+- Maven
 
----
-
-## API Endpoints
+## API endpoints
 
 ### Authentication
+
 | Method | Endpoint | Description |
-|------|--------|------------|
+| --- | --- | --- |
 | POST | `/api/auth/signup` | Create a new user |
 | POST | `/api/auth/login` | Login and receive JWT |
 
----
-
 ### Households
+
 | Method | Endpoint | Description |
-|------|--------|------------|
+| --- | --- | --- |
 | GET | `/api/households` | List households for current user |
 | POST | `/api/households` | Create a household |
 
----
+### Grocery lists
 
-### Grocery Lists
 | Method | Endpoint | Description |
-|------|--------|------------|
+| --- | --- | --- |
 | GET | `/api/households/{householdId}/lists` | List grocery lists |
 | POST | `/api/households/{householdId}/lists` | Create a grocery list |
 
----
+### List items
 
-### List Items
 | Method | Endpoint | Description |
-|------|--------|------------|
+| --- | --- | --- |
 | GET | `/api/lists/{listId}/items` | Get items in a list |
 | POST | `/api/lists/{listId}/items` | Add an item |
-| PATCH | `/api/list-items/{itemId}/purchase` | Mark purchased / unpurchased |
-| DELETE | `/api/list-items/{itemId}` | Remove item (soft delete) |
-
----
+| PATCH | `/api/list-items/{itemId}/purchase` | Mark purchased or unpurchased |
+| DELETE | `/api/list-items/{itemId}` | Remove item with soft delete |
 
 ### Invitations
+
 | Method | Endpoint | Description |
-|------|--------|------------|
-| POST | `/api/households/{householdId}/invites` | Create invite (OWNER only) |
+| --- | --- | --- |
+| POST | `/api/households/{householdId}/invites` | Create invite, owner only |
 | GET | `/api/invites` | View pending invites |
 | POST | `/api/invites/{token}/accept` | Accept invite |
 
----
+## Authentication details
 
-## Authentication Details
+JWTs are returned on signup and login. Protected endpoints require this header:
 
-- JWT is returned on signup and login
-- All protected endpoints require the header: Authorization: Bearer <JWT>
-  Invitation tokens are **separate from JWTs** and are used only for accepting household invitations
+```text
+Authorization: Bearer <JWT>
+```
 
----
+Invitation tokens are separate from JWTs and are used only for accepting household invitations.
 
 ## Testing
 
-- All endpoints were **manually tested using Postman**
-- Tested scenarios include:
-- Signup and login
-- JWT authorization enforcement
-- Household creation and access
-- Invitation creation and acceptance
-- Grocery list and item management
-- Purchased item tracking
+Endpoints were manually tested using Postman. Tested scenarios include signup and login, JWT authorization enforcement, household creation and access, invitation creation and acceptance, grocery list and item management, and purchased item tracking.
 
----
-
-## Running the Application
+## Running the application
 
 ### Prerequisites
-- Java 17+
+
+- Java 21
 - PostgreSQL
 
 ### Run
+
 ```bash
+cd backend/backend
 ./mvnw spring-boot:run
+```
