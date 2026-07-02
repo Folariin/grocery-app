@@ -1,6 +1,7 @@
 package com.mygroceries.backend.controller;
 
 import com.mygroceries.backend.dto.HouseholdDtos.CreateHouseholdRequest;
+import com.mygroceries.backend.dto.HouseholdDtos.HouseholdMemberResponse;
 import com.mygroceries.backend.dto.HouseholdDtos.HouseholdResponse;
 import com.mygroceries.backend.service.HouseholdService;
 import jakarta.validation.Valid;
@@ -37,5 +38,15 @@ public class HouseholdController {
     public ResponseEntity<List<HouseholdResponse>> myHouseholds(Authentication auth) {
         UUID userId = UUID.fromString(auth.getPrincipal().toString());
         return ResponseEntity.ok(householdService.listMyHouseholds(userId));
+    }
+
+    // GET /api/households/{householdId}/members
+    @GetMapping("/{householdId}/members")
+    public ResponseEntity<List<HouseholdMemberResponse>> householdMembers(
+            Authentication auth,
+            @PathVariable UUID householdId
+    ) {
+        UUID userId = UUID.fromString(auth.getPrincipal().toString());
+        return ResponseEntity.ok(householdService.listMembers(userId, householdId));
     }
 }

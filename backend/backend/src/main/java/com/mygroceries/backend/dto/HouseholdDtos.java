@@ -3,6 +3,7 @@ package com.mygroceries.backend.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class HouseholdDtos {
@@ -15,5 +16,15 @@ public class HouseholdDtos {
             UUID id,
             String name,
             String role
+    ) {}
+
+    public record HouseholdMemberResponse(
+            UUID id,
+            UUID userId,
+            String displayName,
+            String email,
+            String role,
+            String status,
+            LocalDateTime joinedAt
     ) {}
 }

@@ -1,5 +1,6 @@
 package com.mygroceries.backend.service;
 
+import com.mygroceries.backend.dto.HouseholdDtos.HouseholdMemberResponse;
 import com.mygroceries.backend.dto.HouseholdDtos.HouseholdResponse;
 import com.mygroceries.backend.model.Household;
 import com.mygroceries.backend.model.HouseholdMember;
@@ -7,8 +8,10 @@ import com.mygroceries.backend.model.User;
 import com.mygroceries.backend.repo.HouseholdMemberRepository;
 import com.mygroceries.backend.repo.HouseholdRepository;
 import com.mygroceries.backend.repo.UserRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 
@@ -61,5 +64,39 @@ public class HouseholdService {
 
 
         return result;
+    }
+
+    @Transactional(readOnly = true)
+    public List<HouseholdMemberResponse> listMembers(UUID userId, UUID householdId) {
+        requireActiveMember(householdId, userId);
+
+        return memberRepository
+                .findByHousehold_IdAndStatusOrderByJoinedAtAsc(householdId, "ACTIVE")
+                .stream()
+                .map(m -> {
+                    User user = m.getUser();
+                    return new HouseholdMemberResponse(
+                            m.getId(),
+                            user.getId(),
+                            user.getDisplayName(),
+                            user.getEmail(),
+                            m.getRole(),
+                            m.getStatus(),
+                            m.getJoinedAt()
+                    );
+                })
+                .toList();
+    }
+
+    private HouseholdMember requireActiveMember(UUID householdId, UUID userId) {
+        HouseholdMember member = memberRepository
+                .findByHousehold_IdAndUser_Id(householdId, userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "Not a household member"));
+
+        if (!"ACTIVE".equalsIgnoreCase(member.getStatus())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Membership not active");
+        }
+
+        return member;
     }
 }

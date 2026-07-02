@@ -8,13 +8,16 @@ export default function Household() {
   const { householdId } = useParams();
 
   const [lists, setLists] = useState([]);
+  const [members, setMembers] = useState([]);
+  const [membersLoading, setMembersLoading] = useState(true);
   const [name, setName] = useState("");
   const [err, setErr] = useState("");
+  const [memberErr, setMemberErr] = useState("");
 
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviteMsg, setInviteMsg] = useState("");
 
-  // Load lists for this household
+  // Load household details
   useEffect(() => {
     let ignore = false;
 
@@ -28,7 +31,21 @@ export default function Household() {
       }
     }
 
+    async function fetchMembers() {
+      setMembersLoading(true);
+      setMemberErr("");
+      try {
+        const res = await api.get(`/api/households/${householdId}/members`);
+        if (!ignore) setMembers(res.data);
+      } catch {
+        if (!ignore) setMemberErr("Could not load members.");
+      } finally {
+        if (!ignore) setMembersLoading(false);
+      }
+    }
+
     fetchLists();
+    fetchMembers();
     return () => {
       ignore = true;
     };
@@ -126,6 +143,46 @@ export default function Household() {
         )}
 
         {err && <div className="error">{err}</div>}
+
+        {/* Members */}
+        <section className="sectionBlock">
+          <div className="sectionHeader">
+            <div>
+              <h3>Members</h3>
+              <div className="muted">Everyone currently in this household</div>
+            </div>
+            <span className="badge">{membersLoading ? "..." : members.length}</span>
+          </div>
+
+          {memberErr && <div className="error">{memberErr}</div>}
+
+          <div className="memberList">
+            {membersLoading && <div className="empty">Loading members...</div>}
+
+            {!membersLoading && members.map((member) => (
+              <div key={member.id} className="memberRow">
+                <div className="memberMain">
+                  <div className="memberName">
+                    {member.displayName || member.email || "Household member"}
+                  </div>
+                  <div className="muted">{member.email || "No email available"}</div>
+                </div>
+                <div className="memberMeta">
+                  <span className="badge">{member.role || "MEMBER"}</span>
+                  <div className="muted">
+                    {member.joinedAt
+                      ? `Joined ${new Date(member.joinedAt).toLocaleDateString()}`
+                      : member.status || "ACTIVE"}
+                  </div>
+                </div>
+              </div>
+            ))}
+
+            {!membersLoading && members.length === 0 && !memberErr && (
+              <div className="empty">No members found.</div>
+            )}
+          </div>
+        </section>
 
         {/* Lists */}
         <div className="grid" style={{ marginTop: 14 }}>
