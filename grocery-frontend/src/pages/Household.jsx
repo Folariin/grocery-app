@@ -8,13 +8,15 @@ export default function Household() {
   const { householdId } = useParams();
 
   const [lists, setLists] = useState([]);
+  const [members, setMembers] = useState([]);
   const [name, setName] = useState("");
   const [err, setErr] = useState("");
+  const [memberErr, setMemberErr] = useState("");
 
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviteMsg, setInviteMsg] = useState("");
 
-  // Load lists for this household
+  // Load household details
   useEffect(() => {
     let ignore = false;
 
@@ -28,7 +30,18 @@ export default function Household() {
       }
     }
 
+    async function fetchMembers() {
+      setMemberErr("");
+      try {
+        const res = await api.get(`/api/households/${householdId}/members`);
+        if (!ignore) setMembers(res.data);
+      } catch {
+        if (!ignore) setMemberErr("Could not load members.");
+      }
+    }
+
     fetchLists();
+    fetchMembers();
     return () => {
       ignore = true;
     };
@@ -126,6 +139,42 @@ export default function Household() {
         )}
 
         {err && <div className="error">{err}</div>}
+
+        {/* Members */}
+        <section className="sectionBlock">
+          <div className="sectionHeader">
+            <div>
+              <h3>Members</h3>
+              <div className="muted">Everyone currently in this household</div>
+            </div>
+            <span className="badge">{members.length}</span>
+          </div>
+
+          {memberErr && <div className="error">{memberErr}</div>}
+
+          <div className="memberList">
+            {members.map((member) => (
+              <div key={member.id} className="memberRow">
+                <div className="memberMain">
+                  <div className="memberName">{member.displayName}</div>
+                  <div className="muted">{member.email}</div>
+                </div>
+                <div className="memberMeta">
+                  <span className="badge">{member.role}</span>
+                  <div className="muted">
+                    {member.joinedAt
+                      ? `Joined ${new Date(member.joinedAt).toLocaleDateString()}`
+                      : member.status}
+                  </div>
+                </div>
+              </div>
+            ))}
+
+            {members.length === 0 && !memberErr && (
+              <div className="empty">No members found.</div>
+            )}
+          </div>
+        </section>
 
         {/* Lists */}
         <div className="grid" style={{ marginTop: 14 }}>
