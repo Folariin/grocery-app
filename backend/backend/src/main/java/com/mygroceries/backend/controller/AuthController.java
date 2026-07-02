@@ -1,17 +1,14 @@
 package com.mygroceries.backend.controller;
 
-import com.mygroceries.backend.security.JwtService;
+import com.mygroceries.backend.dto.AuthDtos.*;
 import com.mygroceries.backend.model.User;
-import com.mygroceries.backend.security.JwtUtil;
+import com.mygroceries.backend.security.JwtService;
 import com.mygroceries.backend.service.PasswordResetService;
 import com.mygroceries.backend.service.UserService;
-import com.mygroceries.backend.dto.AuthDtos.*;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -19,9 +16,7 @@ import java.util.Map;
 public class AuthController {
 
     private final UserService userService;
-
     private final JwtService jwtService;
-
     private final PasswordResetService passwordResetService;
 
     public AuthController(UserService userService, JwtService jwtService, PasswordResetService passwordResetService) {
@@ -72,8 +67,4 @@ public class AuthController {
         passwordResetService.resetPassword(req.token(), req.password(), req.confirmPassword());
         return ResponseEntity.ok(new MessageResponse("Password has been reset."));
     }
-
-
-
-
 }
