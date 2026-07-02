@@ -44,6 +44,10 @@ export default function Login() {
           onChange={(e) => setPassword(e.target.value)}
         />
 
+        <div className="auth-row">
+          <Link to="/forgot-password">Forgot password?</Link>
+        </div>
+
         {err && <div className="error">{err}</div>}
 
         <button type="submit">Log in</button>
