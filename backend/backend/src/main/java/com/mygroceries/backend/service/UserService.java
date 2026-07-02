@@ -6,6 +6,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -38,6 +39,12 @@ public class UserService {
 
     public boolean passwordMatches(String rawPassword, String passwordHash) {
         return encoder.matches(rawPassword, passwordHash);
+    }
+
+    public void updatePassword(User user, String rawPassword) {
+        user.setPasswordHash(encoder.encode(rawPassword));
+        user.setUpdatedAt(LocalDateTime.now());
+        users.save(user);
     }
 
     // custom exceptions
