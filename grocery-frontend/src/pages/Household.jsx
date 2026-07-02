@@ -9,6 +9,7 @@ export default function Household() {
 
   const [lists, setLists] = useState([]);
   const [members, setMembers] = useState([]);
+  const [membersLoading, setMembersLoading] = useState(true);
   const [name, setName] = useState("");
   const [err, setErr] = useState("");
   const [memberErr, setMemberErr] = useState("");
@@ -31,12 +32,15 @@ export default function Household() {
     }
 
     async function fetchMembers() {
+      setMembersLoading(true);
       setMemberErr("");
       try {
         const res = await api.get(`/api/households/${householdId}/members`);
         if (!ignore) setMembers(res.data);
       } catch {
         if (!ignore) setMemberErr("Could not load members.");
+      } finally {
+        if (!ignore) setMembersLoading(false);
       }
     }
 
@@ -147,30 +151,34 @@ export default function Household() {
               <h3>Members</h3>
               <div className="muted">Everyone currently in this household</div>
             </div>
-            <span className="badge">{members.length}</span>
+            <span className="badge">{membersLoading ? "..." : members.length}</span>
           </div>
 
           {memberErr && <div className="error">{memberErr}</div>}
 
           <div className="memberList">
-            {members.map((member) => (
+            {membersLoading && <div className="empty">Loading members...</div>}
+
+            {!membersLoading && members.map((member) => (
               <div key={member.id} className="memberRow">
                 <div className="memberMain">
-                  <div className="memberName">{member.displayName}</div>
-                  <div className="muted">{member.email}</div>
+                  <div className="memberName">
+                    {member.displayName || member.email || "Household member"}
+                  </div>
+                  <div className="muted">{member.email || "No email available"}</div>
                 </div>
                 <div className="memberMeta">
-                  <span className="badge">{member.role}</span>
+                  <span className="badge">{member.role || "MEMBER"}</span>
                   <div className="muted">
                     {member.joinedAt
                       ? `Joined ${new Date(member.joinedAt).toLocaleDateString()}`
-                      : member.status}
+                      : member.status || "ACTIVE"}
                   </div>
                 </div>
               </div>
             ))}
 
-            {members.length === 0 && !memberErr && (
+            {!membersLoading && members.length === 0 && !memberErr && (
               <div className="empty">No members found.</div>
             )}
           </div>
