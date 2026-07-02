@@ -1,0 +1,64 @@
+.page { min-height: 100vh; padding: 20px; }
+.container { max-width: 900px; margin: 0 auto; }
+
+.topbar { padding: 8px 0 18px; }
+.titleBlock { display: flex; gap: 12px; align-items: flex-start; }
+
+.topbar h2 { margin: 0; font-size: 28px; letter-spacing: -0.02em; }
+
+.muted { color: var(--muted); font-size: 13px; }
+
+.linkBtn {
+  border: 1px solid var(--border);
+  background: white;
+  color: var(--text);
+  padding: 10px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.linkBtn:hover { background: #f3f4f6; }
+
+.primaryBtn {
+  width: auto;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 0;
+  background: var(--primary);
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+}
+.primaryBtn:hover { background: var(--primary-dark); }
+
+.inviteList { display: grid; gap: 12px; }
+
+.inviteCard {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 14px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.inviteMain { min-width: 240px; }
+.inviteTitle { font-weight: 700; margin-bottom: 4px; }
+
+.empty {
+  text-align: center;
+  color: var(--muted);
+  padding: 22px 0;
+}
+
+.error {
+  margin: 10px 0;
+  background: #fff1f2;
+  border: 1px solid #fecdd3;
+  color: #9f1239;
+  padding: 10px 12px;
+  border-radius: 10px;
+}
