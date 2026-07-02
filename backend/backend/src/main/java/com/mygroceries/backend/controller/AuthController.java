@@ -3,6 +3,7 @@ package com.mygroceries.backend.controller;
 import com.mygroceries.backend.security.JwtService;
 import com.mygroceries.backend.model.User;
 import com.mygroceries.backend.security.JwtUtil;
+import com.mygroceries.backend.service.PasswordResetService;
 import com.mygroceries.backend.service.UserService;
 import com.mygroceries.backend.dto.AuthDtos.*;
 import jakarta.validation.Valid;
@@ -21,9 +22,12 @@ public class AuthController {
 
     private final JwtService jwtService;
 
-    public AuthController(UserService userService, JwtService jwtService) {
+    private final PasswordResetService passwordResetService;
+
+    public AuthController(UserService userService, JwtService jwtService, PasswordResetService passwordResetService) {
         this.userService = userService;
         this.jwtService = jwtService;
+        this.passwordResetService = passwordResetService;
     }
 
     @PostMapping("/signup")
@@ -55,6 +59,18 @@ public class AuthController {
         );
 
         return ResponseEntity.ok(new AuthResponse(token));
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<MessageResponse> forgotPassword(@Valid @RequestBody ForgotPasswordRequest req) {
+        String message = passwordResetService.requestReset(req.email());
+        return ResponseEntity.ok(new MessageResponse(message));
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<MessageResponse> resetPassword(@Valid @RequestBody ResetPasswordRequest req) {
+        passwordResetService.resetPassword(req.token(), req.password(), req.confirmPassword());
+        return ResponseEntity.ok(new MessageResponse("Password has been reset."));
     }
 
 
