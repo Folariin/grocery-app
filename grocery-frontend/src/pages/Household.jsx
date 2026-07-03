@@ -191,14 +191,15 @@ export default function Household() {
 
           <div className="grid listGrid">
             {lists.map((l) => (
-              <div
+              <button
                 key={l.id}
+                type="button"
                 className="card clickable"
                 onClick={() => nav(`/lists/${l.id}`)}
               >
                 <div className="card-title">{l.name}</div>
                 <div className="muted">Open list</div>
-              </div>
+              </button>
             ))}
 
             {lists.length === 0 && (
