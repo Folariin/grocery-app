@@ -10,6 +10,7 @@ public interface HouseholdMemberRepository extends JpaRepository<HouseholdMember
     Optional<HouseholdMember> findByHousehold_IdAndUser_Id(UUID householdId, UUID userId);
     boolean existsByHousehold_IdAndUser_Id(UUID householdId, UUID userId);
     long countByHousehold_Id(UUID householdId);
+    long countByHousehold_IdAndStatus(UUID householdId, String status);
     List<HouseholdMember> findByUser_IdAndStatus(UUID userId, String status);
     List<HouseholdMember> findByHousehold_IdAndStatusOrderByJoinedAtAsc(UUID householdId, String status);
 }
