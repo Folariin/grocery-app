@@ -1,5 +1,6 @@
 package com.mygroceries.backend.service;
 
+import com.mygroceries.backend.dto.HouseholdDtos.HouseholdActionResponse;
 import com.mygroceries.backend.dto.HouseholdDtos.HouseholdMemberResponse;
 import com.mygroceries.backend.dto.HouseholdDtos.HouseholdResponse;
 import com.mygroceries.backend.model.Household;
@@ -7,6 +8,7 @@ import com.mygroceries.backend.model.HouseholdMember;
 import com.mygroceries.backend.model.User;
 import com.mygroceries.backend.repo.HouseholdMemberRepository;
 import com.mygroceries.backend.repo.HouseholdRepository;
+import com.mygroceries.backend.repo.InvitationRepository;
 import com.mygroceries.backend.repo.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -19,15 +21,21 @@ import java.util.*;
 @Transactional
 public class HouseholdService {
 
+    private static final String ROLE_OWNER = "OWNER";
+    private static final String STATUS_ACTIVE = "ACTIVE";
+
     private final HouseholdRepository householdRepository;
     private final HouseholdMemberRepository memberRepository;
+    private final InvitationRepository invitationRepository;
     private final UserRepository userRepository;
 
     public HouseholdService(HouseholdRepository householdRepository,
                             HouseholdMemberRepository memberRepository,
+                            InvitationRepository invitationRepository,
                             UserRepository userRepository) {
         this.householdRepository = householdRepository;
         this.memberRepository = memberRepository;
+        this.invitationRepository = invitationRepository;
         this.userRepository = userRepository;
     }
 
@@ -44,17 +52,17 @@ public class HouseholdService {
         HouseholdMember ownerMembership = new HouseholdMember();
         ownerMembership.setHousehold(saved);
         ownerMembership.setUser(creator);
-        ownerMembership.setRole("OWNER");
-        ownerMembership.setStatus("ACTIVE");
+        ownerMembership.setRole(ROLE_OWNER);
+        ownerMembership.setStatus(STATUS_ACTIVE);
 
         memberRepository.save(ownerMembership);
 
-        return new HouseholdResponse(saved.getId(), saved.getName(), "OWNER");
+        return new HouseholdResponse(saved.getId(), saved.getName(), ROLE_OWNER);
     }
 
     @Transactional(readOnly = true)
     public List<HouseholdResponse> listMyHouseholds(UUID userId) {
-        List<HouseholdMember> memberships = memberRepository.findByUser_IdAndStatus(userId, "ACTIVE");
+        List<HouseholdMember> memberships = memberRepository.findByUser_IdAndStatus(userId, STATUS_ACTIVE);
 
         List<HouseholdResponse> result = new ArrayList<>();
         for (HouseholdMember m : memberships) {
@@ -62,8 +70,45 @@ public class HouseholdService {
             result.add(new HouseholdResponse(h.getId(), h.getName(), m.getRole()));
         }
 
-
         return result;
+    }
+
+    @Transactional(readOnly = true)
+    public HouseholdResponse getHousehold(UUID userId, UUID householdId) {
+        HouseholdMember member = requireActiveMember(householdId, userId);
+        Household household = member.getHousehold();
+        return new HouseholdResponse(household.getId(), household.getName(), member.getRole());
+    }
+
+    public HouseholdResponse renameHousehold(UUID userId, UUID householdId, String name) {
+        HouseholdMember owner = requireOwner(householdId, userId);
+        Household household = owner.getHousehold();
+        household.setName(name.trim());
+        return new HouseholdResponse(household.getId(), household.getName(), owner.getRole());
+    }
+
+    public HouseholdActionResponse leaveHousehold(UUID userId, UUID householdId) {
+        HouseholdMember member = requireActiveMember(householdId, userId);
+
+        if (ROLE_OWNER.equalsIgnoreCase(member.getRole())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Owner must close the household instead of leaving");
+        }
+
+        memberRepository.delete(member);
+        return new HouseholdActionResponse("You left the household.");
+    }
+
+    public HouseholdActionResponse closeHousehold(UUID userId, UUID householdId) {
+        HouseholdMember owner = requireOwner(householdId, userId);
+        long activeMembers = memberRepository.countByHousehold_IdAndStatus(householdId, STATUS_ACTIVE);
+
+        if (activeMembers > 1) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Owner cannot close a household while other active members exist");
+        }
+
+        invitationRepository.deleteByHousehold_Id(householdId);
+        householdRepository.delete(owner.getHousehold());
+        return new HouseholdActionResponse("Household closed.");
     }
 
     @Transactional(readOnly = true)
@@ -71,7 +116,7 @@ public class HouseholdService {
         requireActiveMember(householdId, userId);
 
         return memberRepository
-                .findByHousehold_IdAndStatusOrderByJoinedAtAsc(householdId, "ACTIVE")
+                .findByHousehold_IdAndStatusOrderByJoinedAtAsc(householdId, STATUS_ACTIVE)
                 .stream()
                 .map(m -> {
                     User user = m.getUser();
@@ -93,8 +138,18 @@ public class HouseholdService {
                 .findByHousehold_IdAndUser_Id(householdId, userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "Not a household member"));
 
-        if (!"ACTIVE".equalsIgnoreCase(member.getStatus())) {
+        if (!STATUS_ACTIVE.equalsIgnoreCase(member.getStatus())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Membership not active");
+        }
+
+        return member;
+    }
+
+    private HouseholdMember requireOwner(UUID householdId, UUID userId) {
+        HouseholdMember member = requireActiveMember(householdId, userId);
+
+        if (!ROLE_OWNER.equalsIgnoreCase(member.getRole())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Only OWNER can manage household settings");
         }
 
         return member;
