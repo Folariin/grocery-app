@@ -5,6 +5,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import Dashboard from "./pages/Dashboard";
 import Household from "./pages/Household";
+import HouseholdSettings from "./pages/HouseholdSettings";
 import ListPage from "./pages/ListPage";
 import Invites from "./pages/Invites";
 import Profile from "./pages/Profile";
@@ -44,6 +45,14 @@ export default function App() {
           element={
             <RequireAuth>
               <Household />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/households/:householdId/settings"
+          element={
+            <RequireAuth>
+              <HouseholdSettings />
             </RequireAuth>
           }
         />
