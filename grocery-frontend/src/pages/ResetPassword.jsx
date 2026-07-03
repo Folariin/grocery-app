@@ -48,22 +48,28 @@ export default function ResetPassword() {
   return (
     <div className="auth-wrap">
       <form className="auth-card" onSubmit={onSubmit}>
-        <h1 className="auth-title">Choose new password</h1>
-        <p className="auth-sub">Enter and confirm your new password.</p>
+        <div className="auth-header">
+          <h1 className="auth-title">Choose new password</h1>
+          <p className="auth-sub">Enter and confirm your new password.</p>
+        </div>
 
-        <label>New password</label>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+        <div className="auth-field">
+          <label>New password</label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
 
-        <label>Confirm password</label>
-        <input
-          type="password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-        />
+        <div className="auth-field">
+          <label>Confirm password</label>
+          <input
+            type="password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+          />
+        </div>
 
         {message && <div className="success">{message}</div>}
         {err && <div className="error">{err}</div>}
