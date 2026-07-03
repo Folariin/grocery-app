@@ -85,14 +85,15 @@ export default function Dashboard() {
 
         <div className="grid">
           {households.map((h) => (
-            <div
+            <button
               key={h.id}
+              type="button"
               className="card clickable"
               onClick={() => nav(`/households/${h.id}`)}
             >
               <div className="card-title">{h.name}</div>
               <span className="badge">{h.role}</span>
-            </div>
+            </button>
           ))}
 
           {households.length === 0 && (
