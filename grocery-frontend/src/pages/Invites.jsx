@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../api/axios"; 
+import api from "../api/axios";
 import "../styles/invites.css";
 
 export default function Invites() {
@@ -39,7 +39,7 @@ export default function Invites() {
   }
 
   return (
-    <div className="page">
+    <div className="page invites-page">
       <div className="container">
         <header className="topbar">
           <div className="titleBlock">
@@ -60,7 +60,7 @@ export default function Invites() {
             <div key={i.inviteId ?? i.token} className="inviteCard">
               <div className="inviteMain">
                 <div className="inviteTitle">{i.householdName ?? "Household Invite"}</div>
-                <div className="muted">
+                <div className="muted inviteMeta">
                   {i.email ? `Sent to: ${i.email}` : ""}
                   {i.expiresAt ? ` • Expires: ${new Date(i.expiresAt).toLocaleString()}` : ""}
                 </div>
