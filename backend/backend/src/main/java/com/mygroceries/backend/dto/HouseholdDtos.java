@@ -12,10 +12,18 @@ public class HouseholdDtos {
             @NotBlank @Size(min = 2, max = 80) String name
     ) {}
 
+    public record UpdateHouseholdRequest(
+            @NotBlank @Size(min = 2, max = 80) String name
+    ) {}
+
     public record HouseholdResponse(
             UUID id,
             String name,
             String role
+    ) {}
+
+    public record HouseholdActionResponse(
+            String message
     ) {}
 
     public record HouseholdMemberResponse(
