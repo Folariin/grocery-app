@@ -31,18 +31,24 @@ export default function Login() {
   return (
     <div className="auth-wrap">
       <form className="auth-card" onSubmit={onSubmit}>
-        <h1 className="auth-title">Grocery App</h1>
-        <p className="auth-sub">Log in to continue</p>
+        <div className="auth-header">
+          <h1 className="auth-title">Grocery App</h1>
+          <p className="auth-sub">Log in to continue</p>
+        </div>
 
-        <label>Email</label>
-        <input value={email} onChange={(e) => setEmail(e.target.value)} />
+        <div className="auth-field">
+          <label>Email</label>
+          <input value={email} onChange={(e) => setEmail(e.target.value)} />
+        </div>
 
-        <label>Password</label>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+        <div className="auth-field">
+          <label>Password</label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
 
         <div className="auth-row">
           <Link to="/forgot-password">Forgot password?</Link>
