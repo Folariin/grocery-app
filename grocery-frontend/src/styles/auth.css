@@ -101,27 +101,27 @@
   transform: none;
 }
 
-.muted {
+.auth-card .muted {
   color: var(--muted);
   font-size: 13px;
   margin: 2px 0 0;
 }
 
-.error,
-.success {
+.auth-card .error,
+.auth-card .success {
   padding: 11px 12px;
   border-radius: var(--radius);
   font-size: 13px;
   line-height: 1.4;
 }
 
-.error {
+.auth-card .error {
   background: var(--danger-bg);
   border: 1px solid var(--danger-border);
   color: var(--danger-text);
 }
 
-.success {
+.auth-card .success {
   background: var(--success-bg);
   border: 1px solid var(--success-border);
   color: var(--success-text);
