@@ -43,8 +43,8 @@ export default function Profile() {
     setMessage("");
 
     const trimmed = displayName.trim();
-    if (!trimmed) {
-      setErr("Display name is required.");
+    if (trimmed.length < 2 || trimmed.length > 60) {
+      setErr("Display name must be between 2 and 60 characters.");
       return;
     }
 
