@@ -9,7 +9,7 @@
   margin: 0 auto;
 }
 
-.topbar {
+.list-page .topbar {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -17,25 +17,25 @@
   padding: 4px 0 22px;
 }
 
-.titleBlock {
+.list-page .titleBlock {
   display: flex;
   gap: 12px;
   align-items: flex-start;
 }
 
-.topbar h2 {
+.list-page .topbar h2 {
   margin: 0;
   font-size: 32px;
   line-height: 1.12;
   letter-spacing: 0;
 }
 
-.muted {
+.list-page .muted {
   color: var(--muted);
   font-size: 13px;
 }
 
-.statPill {
+.list-page .statPill {
   display: inline-flex;
   width: fit-content;
   align-items: center;
@@ -49,8 +49,8 @@
   font-weight: 750;
 }
 
-.linkBtn,
-.primaryBtn {
+.list-page .linkBtn,
+.list-page .primaryBtn {
   min-height: 42px;
   border-radius: var(--radius);
   cursor: pointer;
@@ -58,19 +58,19 @@
   transition: background 150ms ease, border-color 150ms ease, color 150ms ease, box-shadow 150ms ease, transform 150ms ease;
 }
 
-.linkBtn {
+.list-page .linkBtn {
   border: 1px solid var(--border);
   background: white;
   color: var(--text);
   padding: 9px 13px;
 }
 
-.linkBtn:hover {
+.list-page .linkBtn:hover {
   border-color: var(--border-strong);
   background: #f8fbf9;
 }
 
-.primaryBtn {
+.list-page .primaryBtn {
   width: auto;
   padding: 10px 16px;
   border: 0;
@@ -78,15 +78,15 @@
   color: white;
 }
 
-.primaryBtn:hover {
+.list-page .primaryBtn:hover {
   background: var(--primary-dark);
   box-shadow: 0 10px 22px rgba(47, 125, 79, 0.18);
 }
 
-.linkBtn:active,
-.primaryBtn:active { transform: translateY(1px); }
+.list-page .linkBtn:active,
+.list-page .primaryBtn:active { transform: translateY(1px); }
 
-.addCard {
+.list-page .addCard {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -97,18 +97,18 @@
   margin-bottom: 18px;
 }
 
-.row {
+.list-page .row {
   display: grid;
   grid-template-columns: minmax(180px, 1fr) 88px 108px auto;
   gap: 10px;
   align-items: center;
 }
 
-.row + .row {
+.list-page .row + .row {
   grid-template-columns: 1fr;
 }
 
-.addCard input {
+.list-page .addCard input {
   width: 100%;
   min-height: 44px;
   padding: 10px 13px;
@@ -119,18 +119,18 @@
   color: var(--text);
 }
 
-.addCard input:focus {
+.list-page .addCard input:focus {
   background: white;
   border-color: rgba(47, 125, 79, 0.55);
   box-shadow: 0 0 0 4px rgba(47, 125, 79, 0.13);
 }
 
-.list {
+.list-page .list {
   display: grid;
   gap: 10px;
 }
 
-.itemRow {
+.list-page .itemRow {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -142,8 +142,8 @@
   align-items: center;
 }
 
-.check,
-.trash {
+.list-page .check,
+.list-page .trash {
   width: 36px;
   height: 36px;
   border-radius: var(--radius);
@@ -155,64 +155,64 @@
   transition: background 150ms ease, border-color 150ms ease, color 150ms ease;
 }
 
-.check {
+.list-page .check {
   color: var(--primary-dark);
   font-weight: 850;
 }
 
-.check:hover,
-.trash:hover {
+.list-page .check:hover,
+.list-page .trash:hover {
   background: #f8fbf9;
   border-color: var(--border-strong);
 }
 
-.check.checked {
+.list-page .check.checked {
   background: var(--primary-soft);
   border-color: rgba(47, 125, 79, 0.35);
   color: var(--primary-dark);
 }
 
-.itemMain {
+.list-page .itemMain {
   min-width: 0;
 }
 
-.itemTop {
+.list-page .itemTop {
   display: flex;
   justify-content: space-between;
   gap: 12px;
   align-items: baseline;
 }
 
-.itemName {
+.list-page .itemName {
   font-weight: 800;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.itemMeta {
+.list-page .itemMeta {
   color: var(--muted);
   font-size: 13px;
   white-space: nowrap;
 }
 
-.itemNotes {
+.list-page .itemNotes {
   margin-top: 4px;
   color: var(--muted);
   font-size: 13px;
   overflow-wrap: anywhere;
 }
 
-.itemRow.done {
+.list-page .itemRow.done {
   background: rgba(255, 255, 255, 0.72);
 }
 
-.itemRow.done .itemName {
+.list-page .itemRow.done .itemName {
   text-decoration: line-through;
   color: var(--muted);
 }
 
-.empty {
+.list-page .empty {
   text-align: center;
   color: var(--muted);
   padding: 28px 18px;
@@ -221,7 +221,7 @@
   background: rgba(255, 255, 255, 0.72);
 }
 
-.error {
+.list-page .error {
   margin: 10px 0 16px;
   background: var(--danger-bg);
   border: 1px solid var(--danger-border);
@@ -236,32 +236,32 @@
     padding: 20px 14px 34px;
   }
 
-  .topbar,
-  .titleBlock {
+  .list-page .topbar,
+  .list-page .titleBlock {
     display: grid;
     gap: 10px;
   }
 
-  .row,
-  .row + .row {
+  .list-page .row,
+  .list-page .row + .row {
     grid-template-columns: 1fr;
   }
 
-  .primaryBtn,
-  .linkBtn {
+  .list-page .primaryBtn,
+  .list-page .linkBtn {
     width: 100%;
   }
 
-  .itemRow {
+  .list-page .itemRow {
     grid-template-columns: 40px minmax(0, 1fr) 40px;
   }
 
-  .itemTop {
+  .list-page .itemTop {
     display: grid;
     gap: 2px;
   }
 
-  .itemName {
+  .list-page .itemName {
     white-space: normal;
     overflow-wrap: anywhere;
   }
