@@ -53,10 +53,13 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="page">
+    <div className="page dashboard-page">
       <div className="container">
         <header className="topbar">
-          <h2>My Households</h2>
+          <div className="titleBlock">
+            <h2>My Households</h2>
+            <div className="muted">Create and manage shared grocery spaces.</div>
+          </div>
           <div className="top-actions">
             <button className="linkBtn" onClick={() => nav("/invites")}>
               Invites
@@ -84,14 +87,17 @@ export default function Dashboard() {
           {households.map((h) => (
             <div
               key={h.id}
-              className="card"
+              className="card clickable"
               onClick={() => nav(`/households/${h.id}`)}
-              style={{ cursor: "pointer" }}
             >
               <div className="card-title">{h.name}</div>
               <span className="badge">{h.role}</span>
             </div>
           ))}
+
+          {households.length === 0 && (
+            <div className="empty">No households yet. Create your first one above.</div>
+          )}
         </div>
       </div>
     </div>
