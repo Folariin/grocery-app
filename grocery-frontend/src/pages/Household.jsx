@@ -106,6 +106,9 @@ export default function Household() {
           </div>
 
           <div className="top-actions">
+            <button className="linkBtn" onClick={() => nav(`/households/${householdId}/settings`)}>
+              Settings
+            </button>
             <button className="linkBtn" onClick={() => nav("/invites")}>
               Invites
             </button>
