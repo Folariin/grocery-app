@@ -115,7 +115,7 @@ export default function ListPage() {
   }
 
   return (
-    <div className="page">
+    <div className="page list-page">
       <div className="container">
         <header className="topbar">
           <div className="titleBlock">
@@ -124,7 +124,7 @@ export default function ListPage() {
             </button>
             <div>
               <h2>Grocery List</h2>
-              <div className="muted">
+              <div className="statPill">
                 {stats.purchased}/{stats.total} purchased
               </div>
             </div>
@@ -208,7 +208,7 @@ export default function ListPage() {
           })}
 
           {items.length === 0 && (
-            <div className="empty">No items yet. Add your first one 👆</div>
+            <div className="empty">No items yet. Add your first one above.</div>
           )}
         </div>
       </div>
