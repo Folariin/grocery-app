@@ -77,6 +77,8 @@ cp .env.example .env
 
 Spring Boot does not automatically load `.env` files by itself. Either export those values in your shell, configure them in your IDE, or update `src/main/resources/application.properties` for local-only development.
 
+For local schema creation, set `SPRING_JPA_HIBERNATE_DDL_AUTO=update`. The committed default is production-safer and uses `validate`.
+
 3. Run the API:
 
 ```bash
@@ -114,7 +116,7 @@ cp .env.example .env
 npm run dev
 ```
 
-By default, the frontend expects the API at `http://localhost:8080` through `VITE_API_BASE_URL`.
+Local development falls back to `http://localhost:8080` if `VITE_API_BASE_URL` is omitted. Production builds require `VITE_API_BASE_URL`.
 
 ## Environment Variables
 
@@ -122,19 +124,25 @@ By default, the frontend expects the API at `http://localhost:8080` through `VIT
 
 | Variable | Purpose | Example |
 | --- | --- | --- |
-| `SPRING_DATASOURCE_URL` | PostgreSQL JDBC URL | `jdbc:postgresql://localhost:5432/grocerydb` |
-| `SPRING_DATASOURCE_USERNAME` | Database username | `postgres` |
-| `SPRING_DATASOURCE_PASSWORD` | Database password | `yourpassword` |
-| `JWT_SECRET` | Secret used to sign JWTs | long random secret |
+| `APP_ENV` | Runtime environment guard | `local`, `dev`, `production` |
+| `APP_CORS_ALLOWED_ORIGINS` | Comma-separated frontend origins allowed by CORS | `https://app.example.com` |
+| `SPRING_DATASOURCE_URL` | PostgreSQL JDBC URL | `jdbc:postgresql://db.example.com:5432/grocerydb` |
+| `SPRING_DATASOURCE_USERNAME` | Database username | `grocery_app` |
+| `SPRING_DATASOURCE_PASSWORD` | Database password | secret value from host |
+| `SPRING_JPA_HIBERNATE_DDL_AUTO` | Hibernate schema mode | `validate` in production, `update` locally |
+| `SPRING_JPA_SHOW_SQL` | SQL logging | `false` |
+| `SPRING_JPA_FORMAT_SQL` | SQL formatting | `false` |
+| `JWT_SECRET` | Secret used to sign JWTs | long random production secret |
 | `JWT_EXPIRATION_MS` | JWT lifetime in milliseconds | `86400000` |
 | `PASSWORD_RESET_EXPIRATION_MINUTES` | Reset token lifetime | `45` |
-| `PASSWORD_RESET_FRONTEND_URL` | Reset password page URL | `http://localhost:5173/reset-password` |
+| `PASSWORD_RESET_FRONTEND_URL` | Reset password page URL | `https://app.example.com/reset-password` |
+| `PASSWORD_RESET_DELIVERY_MODE` | Reset link delivery mode | `console` for local/dev only |
 
 ### Frontend
 
 | Variable | Purpose | Example |
 | --- | --- | --- |
-| `VITE_API_BASE_URL` | Backend API base URL | `http://localhost:8080` |
+| `VITE_API_BASE_URL` | Backend API base URL, required for production builds | `https://api.example.com` |
 
 ## Screenshots
 
@@ -156,14 +164,18 @@ Suggested screenshots:
 
 - Provision a PostgreSQL database.
 - Set all backend environment variables in the hosting platform.
-- Use a strong production `JWT_SECRET`; do not reuse the example value.
+- Set `APP_ENV=production`.
+- Set `APP_CORS_ALLOWED_ORIGINS` to the deployed frontend origin.
+- Use a strong production `JWT_SECRET`; placeholder/example values are rejected in production.
 - Set `PASSWORD_RESET_FRONTEND_URL` to the deployed frontend reset-password route.
-- Review `spring.jpa.hibernate.ddl-auto` before production. `update` is convenient locally, but migrations are safer for production.
+- Keep `SPRING_JPA_HIBERNATE_DDL_AUTO=validate` unless you intentionally run a migration/setup step.
+- Keep `SPRING_JPA_SHOW_SQL=false` in production.
+- Do not use `PASSWORD_RESET_DELIVERY_MODE=console` in production. Console reset-link delivery is blocked when `APP_ENV=production`; add a real email delivery implementation before public launch.
 - Build with Maven from `backend/backend`.
 
 ### Frontend
 
-- Set `VITE_API_BASE_URL` to the deployed backend URL before building.
+- Set `VITE_API_BASE_URL` to the deployed backend URL before building. Production builds fail clearly if it is missing.
 - Build from `grocery-frontend`:
 
 ```bash
@@ -178,3 +190,4 @@ npm run build
 - Real `.env` files are intentionally ignored by Git.
 - `.env.example` files are committed as safe templates.
 - Local password reset links are logged by the backend console instead of sent by email.
+- Production password reset delivery needs a real email implementation before public deployment.
