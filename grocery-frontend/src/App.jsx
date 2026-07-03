@@ -7,6 +7,7 @@ import Dashboard from "./pages/Dashboard";
 import Household from "./pages/Household";
 import ListPage from "./pages/ListPage";
 import Invites from "./pages/Invites";
+import Profile from "./pages/Profile";
 
 function RequireAuth({ children }) {
   const token = localStorage.getItem("token");
@@ -27,6 +28,14 @@ export default function App() {
           element={
             <RequireAuth>
               <Dashboard />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <RequireAuth>
+              <Profile />
             </RequireAuth>
           }
         />
