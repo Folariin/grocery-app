@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import api from "../api/axios"; // change to "../api/api" if that's your file name
+import api from "../api/axios";
 import "../styles/household.css";
 
 export default function Household() {
@@ -92,7 +92,7 @@ export default function Household() {
   }
 
   return (
-    <div className="page">
+    <div className="page household-page">
       <div className="container">
         <header className="topbar">
           <div className="titleBlock">
@@ -125,7 +125,7 @@ export default function Household() {
         </form>
 
         {/* Invite member */}
-        <form className="create-card" onSubmit={sendInvite} style={{ marginTop: 12 }}>
+        <form className="create-card invite-form" onSubmit={sendInvite}>
           <input
             placeholder="Invite member by email..."
             value={inviteEmail}
@@ -136,11 +136,7 @@ export default function Household() {
           </button>
         </form>
 
-        {inviteMsg && (
-          <div className="muted" style={{ marginTop: 8 }}>
-            {inviteMsg}
-          </div>
-        )}
+        {inviteMsg && <div className="statusNote">{inviteMsg}</div>}
 
         {err && <div className="error">{err}</div>}
 
@@ -185,22 +181,31 @@ export default function Household() {
         </section>
 
         {/* Lists */}
-        <div className="grid" style={{ marginTop: 14 }}>
-          {lists.map((l) => (
-            <div
-              key={l.id}
-              className="card clickable"
-              onClick={() => nav(`/lists/${l.id}`)}
-            >
-              <div className="card-title">{l.name}</div>
-              <div className="muted">Open list</div>
+        <section className="sectionBlock">
+          <div className="sectionHeader">
+            <div>
+              <h3>Lists</h3>
+              <div className="muted">Open a grocery list for this household</div>
             </div>
-          ))}
+          </div>
 
-          {lists.length === 0 && (
-            <div className="empty">No lists yet. Create your first one 👆</div>
-          )}
-        </div>
+          <div className="grid listGrid">
+            {lists.map((l) => (
+              <div
+                key={l.id}
+                className="card clickable"
+                onClick={() => nav(`/lists/${l.id}`)}
+              >
+                <div className="card-title">{l.name}</div>
+                <div className="muted">Open list</div>
+              </div>
+            ))}
+
+            {lists.length === 0 && (
+              <div className="empty">No lists yet. Create your first one above.</div>
+            )}
+          </div>
+        </section>
       </div>
     </div>
   );
