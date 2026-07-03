@@ -12,4 +12,6 @@ public interface InvitationRepository extends JpaRepository<Invitation, UUID> {
     Optional<Invitation> findByToken(String token);
 
     List<Invitation> findByEmailIgnoreCaseAndStatusOrderByCreatedAtDesc(String email, Status status);
+
+    void deleteByHousehold_Id(UUID householdId);
 }
