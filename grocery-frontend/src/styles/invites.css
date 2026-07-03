@@ -9,30 +9,30 @@
   margin: 0 auto;
 }
 
-.topbar {
+.invites-page .topbar {
   padding: 4px 0 22px;
 }
 
-.titleBlock {
+.invites-page .titleBlock {
   display: flex;
   gap: 12px;
   align-items: flex-start;
 }
 
-.topbar h2 {
+.invites-page .topbar h2 {
   margin: 0;
   font-size: 32px;
   line-height: 1.12;
   letter-spacing: 0;
 }
 
-.muted {
+.invites-page .muted {
   color: var(--muted);
   font-size: 13px;
 }
 
-.linkBtn,
-.primaryBtn {
+.invites-page .linkBtn,
+.invites-page .primaryBtn {
   min-height: 42px;
   border-radius: var(--radius);
   cursor: pointer;
@@ -40,19 +40,19 @@
   transition: background 150ms ease, border-color 150ms ease, color 150ms ease, box-shadow 150ms ease, transform 150ms ease;
 }
 
-.linkBtn {
+.invites-page .linkBtn {
   border: 1px solid var(--border);
   background: white;
   color: var(--text);
   padding: 9px 13px;
 }
 
-.linkBtn:hover {
+.invites-page .linkBtn:hover {
   border-color: var(--border-strong);
   background: #f8fbf9;
 }
 
-.primaryBtn {
+.invites-page .primaryBtn {
   width: auto;
   padding: 10px 16px;
   border: 0;
@@ -60,20 +60,20 @@
   color: white;
 }
 
-.primaryBtn:hover {
+.invites-page .primaryBtn:hover {
   background: var(--primary-dark);
   box-shadow: 0 10px 22px rgba(47, 125, 79, 0.18);
 }
 
-.linkBtn:active,
-.primaryBtn:active { transform: translateY(1px); }
+.invites-page .linkBtn:active,
+.invites-page .primaryBtn:active { transform: translateY(1px); }
 
-.inviteList {
+.invites-page .inviteList {
   display: grid;
   gap: 12px;
 }
 
-.inviteCard {
+.invites-page .inviteCard {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -85,22 +85,22 @@
   justify-content: space-between;
 }
 
-.inviteMain {
+.invites-page .inviteMain {
   min-width: 0;
 }
 
-.inviteTitle {
+.invites-page .inviteTitle {
   font-weight: 800;
   font-size: 16px;
   margin-bottom: 4px;
   overflow-wrap: anywhere;
 }
 
-.inviteMeta {
+.invites-page .inviteMeta {
   overflow-wrap: anywhere;
 }
 
-.empty {
+.invites-page .empty {
   text-align: center;
   color: var(--muted);
   padding: 28px 18px;
@@ -109,7 +109,7 @@
   background: rgba(255, 255, 255, 0.72);
 }
 
-.error {
+.invites-page .error {
   margin: 10px 0 16px;
   background: var(--danger-bg);
   border: 1px solid var(--danger-border);
@@ -124,14 +124,14 @@
     padding: 20px 14px 34px;
   }
 
-  .titleBlock,
-  .inviteCard {
+  .invites-page .titleBlock,
+  .invites-page .inviteCard {
     display: grid;
     gap: 10px;
   }
 
-  .primaryBtn,
-  .linkBtn {
+  .invites-page .primaryBtn,
+  .invites-page .linkBtn {
     width: 100%;
   }
 }
