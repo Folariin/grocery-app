@@ -123,6 +123,10 @@
 }
 
 .dashboard-page .card {
+  appearance: none;
+  width: 100%;
+  color: var(--text);
+  text-align: left;
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
