@@ -25,6 +25,7 @@ public class PasswordResetService {
 
     private final UserService userService;
     private final PasswordResetTokenRepository tokenRepository;
+    private final PasswordResetDeliveryService deliveryService;
     private final SecureRandom secureRandom = new SecureRandom();
     private final long expirationMinutes;
     private final String resetBaseUrl;
@@ -32,11 +33,13 @@ public class PasswordResetService {
     public PasswordResetService(
             UserService userService,
             PasswordResetTokenRepository tokenRepository,
+            PasswordResetDeliveryService deliveryService,
             @Value("${password-reset.expiration-minutes:45}") long expirationMinutes,
             @Value("${password-reset.frontend-url:http://localhost:5173/reset-password}") String resetBaseUrl
     ) {
         this.userService = userService;
         this.tokenRepository = tokenRepository;
+        this.deliveryService = deliveryService;
         this.expirationMinutes = expirationMinutes;
         this.resetBaseUrl = resetBaseUrl;
     }
@@ -78,7 +81,7 @@ public class PasswordResetService {
 
         tokenRepository.save(resetToken);
 
-        System.out.println("Password reset link: " + resetBaseUrl + "?token=" + rawToken);
+        deliveryService.sendResetLink(user, resetBaseUrl + "?token=" + rawToken);
     }
 
     private String generateToken() {
