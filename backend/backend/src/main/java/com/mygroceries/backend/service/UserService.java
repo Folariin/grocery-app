@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -37,6 +38,10 @@ public class UserService {
         return users.findByEmailIgnoreCase(email.trim());
     }
 
+    public User getById(UUID userId) {
+        return users.findById(userId).orElseThrow(UserNotFoundException::new);
+    }
+
     public boolean passwordMatches(String rawPassword, String passwordHash) {
         return encoder.matches(rawPassword, passwordHash);
     }
@@ -47,7 +52,15 @@ public class UserService {
         users.save(user);
     }
 
+    public User updateDisplayName(UUID userId, String displayName) {
+        User user = getById(userId);
+        user.setDisplayName(displayName.trim());
+        user.setUpdatedAt(LocalDateTime.now());
+        return users.save(user);
+    }
+
     // custom exceptions
     public static class EmailAlreadyUsedException extends RuntimeException {}
     public static class InvalidCredentialsException extends RuntimeException {}
+    public static class UserNotFoundException extends RuntimeException {}
 }
