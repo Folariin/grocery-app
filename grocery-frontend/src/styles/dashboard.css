@@ -9,7 +9,7 @@
   margin: 0 auto;
 }
 
-.topbar {
+.dashboard-page .topbar {
   display: flex;
   gap: 18px;
   align-items: flex-start;
@@ -17,19 +17,19 @@
   padding: 4px 0 22px;
 }
 
-.topbar h2 {
+.dashboard-page .topbar h2 {
   margin: 0;
   font-size: 32px;
   line-height: 1.12;
   letter-spacing: 0;
 }
 
-.titleBlock {
+.dashboard-page .titleBlock {
   display: grid;
   gap: 4px;
 }
 
-.top-actions {
+.dashboard-page .top-actions {
   display: flex;
   gap: 10px;
   align-items: center;
@@ -37,8 +37,8 @@
   justify-content: flex-end;
 }
 
-.linkBtn,
-.primaryBtn {
+.dashboard-page .linkBtn,
+.dashboard-page .primaryBtn {
   min-height: 42px;
   border-radius: var(--radius);
   cursor: pointer;
@@ -46,19 +46,19 @@
   transition: background 150ms ease, border-color 150ms ease, color 150ms ease, box-shadow 150ms ease, transform 150ms ease;
 }
 
-.linkBtn {
+.dashboard-page .linkBtn {
   border: 1px solid var(--border);
   background: white;
   color: var(--text);
   padding: 9px 13px;
 }
 
-.linkBtn:hover {
+.dashboard-page .linkBtn:hover {
   border-color: var(--border-strong);
   background: #f8fbf9;
 }
 
-.primaryBtn {
+.dashboard-page .primaryBtn {
   width: auto;
   padding: 10px 16px;
   border: 0;
@@ -66,15 +66,15 @@
   color: white;
 }
 
-.primaryBtn:hover {
+.dashboard-page .primaryBtn:hover {
   background: var(--primary-dark);
   box-shadow: 0 10px 22px rgba(47, 125, 79, 0.18);
 }
 
-.linkBtn:active,
-.primaryBtn:active { transform: translateY(1px); }
+.dashboard-page .linkBtn:active,
+.dashboard-page .primaryBtn:active { transform: translateY(1px); }
 
-.create-card {
+.dashboard-page .create-card {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -87,7 +87,7 @@
   margin-bottom: 18px;
 }
 
-.create-card input {
+.dashboard-page .create-card input {
   width: 100%;
   min-height: 44px;
   padding: 10px 13px;
@@ -98,31 +98,31 @@
   color: var(--text);
 }
 
-.create-card input:focus {
+.dashboard-page .create-card input:focus {
   background: white;
   border-color: rgba(47, 125, 79, 0.55);
   box-shadow: 0 0 0 4px rgba(47, 125, 79, 0.13);
 }
 
-.grid {
+.dashboard-page .grid {
   display: grid;
   gap: 14px;
   grid-template-columns: 1fr;
 }
 
 @media (min-width: 640px) {
-  .grid {
+  .dashboard-page .grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 @media (min-width: 1024px) {
-  .grid {
+  .dashboard-page .grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
-.card {
+.dashboard-page .card {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -135,24 +135,24 @@
   gap: 18px;
 }
 
-.clickable {
+.dashboard-page .clickable {
   cursor: pointer;
 }
 
-.clickable:hover {
+.dashboard-page .clickable:hover {
   border-color: rgba(47, 125, 79, 0.35);
   box-shadow: var(--shadow);
   transform: translateY(-1px);
 }
 
-.card-title {
+.dashboard-page .card-title {
   font-weight: 800;
   font-size: 17px;
   line-height: 1.3;
   overflow-wrap: anywhere;
 }
 
-.badge {
+.dashboard-page .badge {
   display: inline-flex;
   width: fit-content;
   align-items: center;
@@ -165,17 +165,17 @@
   border: 1px solid #cfe8d7;
 }
 
-.muted {
+.dashboard-page .muted {
   color: var(--muted);
   font-size: 13px;
 }
 
-.error,
-.empty {
+.dashboard-page .error,
+.dashboard-page .empty {
   border-radius: var(--radius);
 }
 
-.error {
+.dashboard-page .error {
   margin: 10px 0 16px;
   background: var(--danger-bg);
   border: 1px solid var(--danger-border);
@@ -184,7 +184,7 @@
   font-size: 13px;
 }
 
-.empty {
+.dashboard-page .empty {
   grid-column: 1 / -1;
   background: rgba(255, 255, 255, 0.72);
   border: 1px dashed var(--border-strong);
@@ -198,24 +198,24 @@
     padding: 20px 14px 34px;
   }
 
-  .topbar {
+  .dashboard-page .topbar {
     display: grid;
     gap: 14px;
   }
 
-  .top-actions,
-  .create-card {
+  .dashboard-page .top-actions,
+  .dashboard-page .create-card {
     grid-template-columns: 1fr;
     width: 100%;
   }
 
-  .top-actions {
+  .dashboard-page .top-actions {
     display: grid;
     grid-template-columns: 1fr 1fr;
   }
 
-  .linkBtn,
-  .primaryBtn {
+  .dashboard-page .linkBtn,
+  .dashboard-page .primaryBtn {
     width: 100%;
   }
 }
