@@ -28,6 +28,7 @@ The project is split into a Spring Boot API and a React/Vite frontend.
 - PostgreSQL
 - JWT
 - Maven
+- Resend-compatible password reset email delivery
 
 ### Frontend
 
@@ -136,7 +137,10 @@ Local development falls back to `http://localhost:8080` if `VITE_API_BASE_URL` i
 | `JWT_EXPIRATION_MS` | JWT lifetime in milliseconds | `86400000` |
 | `PASSWORD_RESET_EXPIRATION_MINUTES` | Reset token lifetime | `45` |
 | `PASSWORD_RESET_FRONTEND_URL` | Reset password page URL | `https://app.example.com/reset-password` |
-| `PASSWORD_RESET_DELIVERY_MODE` | Reset link delivery mode | `console` for local/dev only |
+| `PASSWORD_RESET_DELIVERY_MODE` | Reset link delivery mode | `console` locally, `resend` in production |
+| `RESEND_API_KEY` | Resend API key, required for Resend delivery | secret value from Resend |
+| `RESEND_FROM_EMAIL` | Verified sender email/domain for Resend | `no-reply@example.com` |
+| `RESEND_FROM_NAME` | Display name for reset emails | `Grocery App` |
 
 ### Frontend
 
@@ -168,9 +172,10 @@ Suggested screenshots:
 - Set `APP_CORS_ALLOWED_ORIGINS` to the deployed frontend origin.
 - Use a strong production `JWT_SECRET`; placeholder/example values are rejected in production.
 - Set `PASSWORD_RESET_FRONTEND_URL` to the deployed frontend reset-password route.
+- Set `PASSWORD_RESET_DELIVERY_MODE=resend` for production password reset emails.
+- Set `RESEND_API_KEY`, `RESEND_FROM_EMAIL`, and optionally `RESEND_FROM_NAME`. The sender email/domain must be verified in Resend.
 - Keep `SPRING_JPA_HIBERNATE_DDL_AUTO=validate` unless you intentionally run a migration/setup step.
 - Keep `SPRING_JPA_SHOW_SQL=false` in production.
-- Do not use `PASSWORD_RESET_DELIVERY_MODE=console` in production. Console reset-link delivery is blocked when `APP_ENV=production`; add a real email delivery implementation before public launch.
 - Build with Maven from `backend/backend`.
 
 ### Frontend
@@ -190,4 +195,5 @@ npm run build
 - Real `.env` files are intentionally ignored by Git.
 - `.env.example` files are committed as safe templates.
 - Local password reset links are logged by the backend console instead of sent by email.
-- Production password reset delivery needs a real email implementation before public deployment.
+- Production password reset delivery uses Resend when `PASSWORD_RESET_DELIVERY_MODE=resend`.
+- Do not commit Resend API keys or any other provider secrets.
