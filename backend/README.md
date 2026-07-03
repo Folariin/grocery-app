@@ -41,17 +41,25 @@ Example environment values are documented in `backend/backend/.env.example`.
 
 Spring Boot does not automatically load `.env` files on its own. For local development, either export the variables in your shell, configure them in your IDE, or use `backend/backend/src/main/resources/application.properties` for local-only settings.
 
+The committed defaults are production-safer: SQL logging is off and Hibernate uses `validate`. For local database bootstrapping, set `SPRING_JPA_HIBERNATE_DDL_AUTO=update` intentionally.
+
 Key settings:
 
 | Variable | Purpose |
 | --- | --- |
+| `APP_ENV` | Runtime environment guard, such as `local` or `production` |
+| `APP_CORS_ALLOWED_ORIGINS` | Comma-separated frontend origins allowed by CORS |
 | `SPRING_DATASOURCE_URL` | PostgreSQL JDBC URL |
 | `SPRING_DATASOURCE_USERNAME` | Database username |
 | `SPRING_DATASOURCE_PASSWORD` | Database password |
+| `SPRING_JPA_HIBERNATE_DDL_AUTO` | Hibernate schema mode |
+| `SPRING_JPA_SHOW_SQL` | SQL logging flag |
+| `SPRING_JPA_FORMAT_SQL` | SQL formatting flag |
 | `JWT_SECRET` | JWT signing secret |
 | `JWT_EXPIRATION_MS` | JWT lifetime in milliseconds |
 | `PASSWORD_RESET_EXPIRATION_MINUTES` | Password reset token lifetime |
 | `PASSWORD_RESET_FRONTEND_URL` | Frontend reset-password URL |
+| `PASSWORD_RESET_DELIVERY_MODE` | Reset link delivery mode; `console` is local/dev only |
 
 ### Run
 
@@ -140,14 +148,31 @@ Invites are visible to users who sign up and log in with the invited email addre
 - Password reset tokens are generated securely and stored hashed.
 - Forgot-password responses are intentionally generic to avoid account enumeration.
 - Household actions enforce active membership and owner checks on the backend.
+- Placeholder JWT secrets are rejected when `APP_ENV=production`.
+- Console password reset delivery is blocked when `APP_ENV=production`.
+
+## Password Reset Delivery
+
+`PasswordResetService` delegates reset-link delivery to `PasswordResetDeliveryService`.
+
+Current implementation:
+
+- `ConsolePasswordResetDeliveryService` is selected when `PASSWORD_RESET_DELIVERY_MODE=console` or the mode is omitted.
+- Console delivery is for local/dev only.
+- No real email provider is integrated yet.
+- Public production deployment needs a real email delivery implementation before password reset can be safely enabled.
 
 ## Deployment Notes
 
 - Set all environment variables in the deployment platform.
+- Set `APP_ENV=production`.
+- Set `APP_CORS_ALLOWED_ORIGINS` to the deployed frontend origin.
 - Use a production PostgreSQL database.
 - Use a strong production `JWT_SECRET`.
 - Set `PASSWORD_RESET_FRONTEND_URL` to the deployed frontend reset-password page.
-- Review `spring.jpa.hibernate.ddl-auto` before production. Prefer migrations for long-term production use.
+- Keep `SPRING_JPA_HIBERNATE_DDL_AUTO=validate` unless a migration/setup process intentionally uses another value.
+- Keep `SPRING_JPA_SHOW_SQL=false` in production.
+- Do not use console reset-link delivery in production.
 - Build from `backend/backend` with Maven.
 
 ## Testing
