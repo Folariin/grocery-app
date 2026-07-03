@@ -13,6 +13,7 @@ The API handles authentication, users, households, memberships, invites, grocery
 - PostgreSQL
 - JWT
 - Maven
+- Resend-compatible password reset email delivery
 
 ## Project Location
 
@@ -59,7 +60,10 @@ Key settings:
 | `JWT_EXPIRATION_MS` | JWT lifetime in milliseconds |
 | `PASSWORD_RESET_EXPIRATION_MINUTES` | Password reset token lifetime |
 | `PASSWORD_RESET_FRONTEND_URL` | Frontend reset-password URL |
-| `PASSWORD_RESET_DELIVERY_MODE` | Reset link delivery mode; `console` is local/dev only |
+| `PASSWORD_RESET_DELIVERY_MODE` | Reset link delivery mode; `console` locally or `resend` in production |
+| `RESEND_API_KEY` | Resend API key, required when delivery mode is `resend` |
+| `RESEND_FROM_EMAIL` | Verified Resend sender email/domain |
+| `RESEND_FROM_NAME` | Display name for reset emails |
 
 ### Run
 
@@ -150,17 +154,20 @@ Invites are visible to users who sign up and log in with the invited email addre
 - Household actions enforce active membership and owner checks on the backend.
 - Placeholder JWT secrets are rejected when `APP_ENV=production`.
 - Console password reset delivery is blocked when `APP_ENV=production`.
+- Resend API keys must be stored only in deployment environment variables.
 
 ## Password Reset Delivery
 
 `PasswordResetService` delegates reset-link delivery to `PasswordResetDeliveryService`.
 
-Current implementation:
+Current implementations:
 
 - `ConsolePasswordResetDeliveryService` is selected when `PASSWORD_RESET_DELIVERY_MODE=console` or the mode is omitted.
+- `ResendPasswordResetDeliveryService` is selected when `PASSWORD_RESET_DELIVERY_MODE=resend`.
 - Console delivery is for local/dev only.
-- No real email provider is integrated yet.
-- Public production deployment needs a real email delivery implementation before password reset can be safely enabled.
+- Resend delivery requires `RESEND_API_KEY` and `RESEND_FROM_EMAIL`.
+- `RESEND_FROM_EMAIL` must use a sender address/domain verified in Resend.
+- No Resend secrets are committed to the repository.
 
 ## Deployment Notes
 
@@ -170,9 +177,10 @@ Current implementation:
 - Use a production PostgreSQL database.
 - Use a strong production `JWT_SECRET`.
 - Set `PASSWORD_RESET_FRONTEND_URL` to the deployed frontend reset-password page.
+- Set `PASSWORD_RESET_DELIVERY_MODE=resend` for production reset emails.
+- Set `RESEND_API_KEY`, `RESEND_FROM_EMAIL`, and optionally `RESEND_FROM_NAME`.
 - Keep `SPRING_JPA_HIBERNATE_DDL_AUTO=validate` unless a migration/setup process intentionally uses another value.
 - Keep `SPRING_JPA_SHOW_SQL=false` in production.
-- Do not use console reset-link delivery in production.
 - Build from `backend/backend` with Maven.
 
 ## Testing
@@ -185,3 +193,4 @@ There is no formal test suite documented yet. Before deployment, manually verify
 - Household create, rename, leave, and sole-owner close
 - Invite creation and acceptance
 - Grocery list and item workflows
+- Resend password reset email delivery in the production/staging environment
