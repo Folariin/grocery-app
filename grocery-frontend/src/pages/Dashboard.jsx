@@ -61,6 +61,9 @@ export default function Dashboard() {
             <div className="muted">Create and manage shared grocery spaces.</div>
           </div>
           <div className="top-actions">
+            <button className="linkBtn" onClick={() => nav("/profile")}>
+              Profile
+            </button>
             <button className="linkBtn" onClick={() => nav("/invites")}>
               Invites
             </button>
