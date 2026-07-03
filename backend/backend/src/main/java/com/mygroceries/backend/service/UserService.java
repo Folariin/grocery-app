@@ -53,8 +53,13 @@ public class UserService {
     }
 
     public User updateDisplayName(UUID userId, String displayName) {
+        String trimmed = displayName.trim();
+        if (trimmed.length() < 2 || trimmed.length() > 60) {
+            throw new InvalidDisplayNameException();
+        }
+
         User user = getById(userId);
-        user.setDisplayName(displayName.trim());
+        user.setDisplayName(trimmed);
         user.setUpdatedAt(LocalDateTime.now());
         return users.save(user);
     }
@@ -63,4 +68,5 @@ public class UserService {
     public static class EmailAlreadyUsedException extends RuntimeException {}
     public static class InvalidCredentialsException extends RuntimeException {}
     public static class UserNotFoundException extends RuntimeException {}
+    public static class InvalidDisplayNameException extends RuntimeException {}
 }
