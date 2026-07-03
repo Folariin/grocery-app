@@ -29,11 +29,15 @@ export default function ForgotPassword() {
   return (
     <div className="auth-wrap">
       <form className="auth-card" onSubmit={onSubmit}>
-        <h1 className="auth-title">Reset password</h1>
-        <p className="auth-sub">Enter your email to request a reset link.</p>
+        <div className="auth-header">
+          <h1 className="auth-title">Reset password</h1>
+          <p className="auth-sub">Enter your email to request a reset link.</p>
+        </div>
 
-        <label>Email</label>
-        <input value={email} onChange={(e) => setEmail(e.target.value)} />
+        <div className="auth-field">
+          <label>Email</label>
+          <input value={email} onChange={(e) => setEmail(e.target.value)} />
+        </div>
 
         {message && <div className="success">{message}</div>}
         {err && <div className="error">{err}</div>}
