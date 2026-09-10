@@ -16,36 +16,48 @@ import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.HexFormat;
+import java.util.Optional;
 
 @Service
 @Transactional
 public class PasswordResetService {
 
     public static final String RESET_MESSAGE = "If an account exists for that email, a password reset link has been sent.";
+    public static final String RESET_UNAVAILABLE_MESSAGE = "Password reset is currently unavailable. Please try again later.";
 
     private final UserService userService;
     private final PasswordResetTokenRepository tokenRepository;
-    private final PasswordResetDeliveryService deliveryService;
+    private final Optional<PasswordResetDeliveryService> deliveryService;
     private final SecureRandom secureRandom = new SecureRandom();
     private final long expirationMinutes;
     private final String resetBaseUrl;
+    private final String deliveryMode;
 
     public PasswordResetService(
             UserService userService,
             PasswordResetTokenRepository tokenRepository,
-            PasswordResetDeliveryService deliveryService,
+            Optional<PasswordResetDeliveryService> deliveryService,
             @Value("${password-reset.expiration-minutes:45}") long expirationMinutes,
-            @Value("${password-reset.frontend-url:http://localhost:5173/reset-password}") String resetBaseUrl
+            @Value("${password-reset.frontend-url:http://localhost:5173/reset-password}") String resetBaseUrl,
+            @Value("${password-reset.delivery-mode:console}") String deliveryMode
     ) {
         this.userService = userService;
         this.tokenRepository = tokenRepository;
         this.deliveryService = deliveryService;
         this.expirationMinutes = expirationMinutes;
         this.resetBaseUrl = resetBaseUrl;
+        this.deliveryMode = normalizeDeliveryMode(deliveryMode);
+
+        validateDeliveryMode();
     }
 
     public String requestReset(String email) {
-        userService.findByEmail(email).ifPresent(this::createResetToken);
+        if (isDeliveryDisabled()) {
+            return RESET_UNAVAILABLE_MESSAGE;
+        }
+
+        PasswordResetDeliveryService activeDeliveryService = requireDeliveryService();
+        userService.findByEmail(email).ifPresent(user -> createResetToken(user, activeDeliveryService));
         return RESET_MESSAGE;
     }
 
@@ -66,7 +78,7 @@ public class PasswordResetService {
         resetToken.setUsedAt(now);
     }
 
-    private void createResetToken(User user) {
+    private void createResetToken(User user, PasswordResetDeliveryService activeDeliveryService) {
         LocalDateTime now = LocalDateTime.now();
         tokenRepository.findByUser_IdAndUsedAtIsNull(user.getId())
                 .forEach(existing -> existing.setUsedAt(now));
@@ -81,7 +93,37 @@ public class PasswordResetService {
 
         tokenRepository.save(resetToken);
 
-        deliveryService.sendResetLink(user, resetBaseUrl + "?token=" + rawToken);
+        activeDeliveryService.sendResetLink(user, resetBaseUrl + "?token=" + rawToken);
+    }
+
+    private void validateDeliveryMode() {
+        if (isDeliveryDisabled()) {
+            return;
+        }
+
+        if (!"console".equals(deliveryMode) && !"resend".equals(deliveryMode)) {
+            throw new IllegalStateException("Unsupported password reset delivery mode: " + deliveryMode);
+        }
+
+        requireDeliveryService();
+    }
+
+    private PasswordResetDeliveryService requireDeliveryService() {
+        return deliveryService.orElseThrow(() -> new IllegalStateException(
+                "No password reset delivery service configured for mode: " + deliveryMode
+        ));
+    }
+
+    private boolean isDeliveryDisabled() {
+        return "disabled".equals(deliveryMode);
+    }
+
+    private String normalizeDeliveryMode(String mode) {
+        if (mode == null || mode.trim().isEmpty()) {
+            return "console";
+        }
+
+        return mode.trim().toLowerCase();
     }
 
     private String generateToken() {
