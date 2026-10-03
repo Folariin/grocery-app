@@ -131,7 +131,7 @@ export default function HouseholdSettings() {
             </button>
             <div>
               <h2>Household Settings</h2>
-              <div className="muted">{loading ? "Loading household..." : household?.name || householdId}</div>
+              <div className="muted">{loading ? "Loading household..." : household?.name || "Household"}</div>
             </div>
           </div>
           <div className="top-actions">
