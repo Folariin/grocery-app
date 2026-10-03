@@ -94,12 +94,11 @@ export default function Household() {
 
     setInviteMsg("");
     try {
-      const res = await api.post(`/api/households/${householdId}/invites`, {
+      await api.post(`/api/households/${householdId}/invites`, {
         email,
       });
 
-      const token = res.data?.token; // optional if your backend returns it
-      setInviteMsg(token ? `Invite created. Token: ${token}` : "Invite created.");
+      setInviteMsg("Invitation sent successfully.");
       setInviteEmail("");
     } catch {
       setInviteMsg("Could not send invite.");
