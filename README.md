@@ -62,12 +62,12 @@ Pending household invites can be reviewed and accepted from the invites page.
 - Maven Wrapper
 - Docker multi-stage backend build
 
-### Database and Hosting Targets
+### Database & Deployment
 
-- PostgreSQL, with Neon recommended for hosted production database
-- Vercel recommended for the static React frontend
-- Render recommended for the Spring Boot backend container/service
-- GitHub as the source repository and deployment source
+- PostgreSQL on Neon
+- Frontend deployed on Vercel
+- Spring Boot backend deployed on Render
+- GitHub used as the source repository and deployment source
 
 ## Architecture
 
@@ -84,18 +84,13 @@ The frontend stores the JWT in `localStorage` and sends it on API requests throu
 
 ## Security / Engineering Practices
 
-- Passwords are hashed with `BCryptPasswordEncoder`; raw passwords are not stored.
-- JWT signing uses an environment-driven secret, and placeholder JWT secrets are rejected in production.
-- CORS allowed origins are configurable through environment variables.
-- SQL logging is environment-driven and disabled by default in committed config.
-- Hibernate `ddl-auto` is environment-driven and defaults to `validate` in committed config.
-- Real `.env` files are ignored; `.env.example` files contain placeholders only.
-- Password reset requests avoid account enumeration by using safe responses.
-- Reset tokens are generated with secure randomness, stored as SHA-256 hashes, expire after 45 minutes by default, and are marked used after reset.
-- Console password reset links are available for local/dev mode only and are blocked in production.
-- `PASSWORD_RESET_DELIVERY_MODE=disabled` allows production deployments without generating or storing reset tokens.
-- Resend email delivery exists behind `PASSWORD_RESET_DELIVERY_MODE=resend`, but it requires provider env vars and a verified sender/domain before use.
-- The backend Dockerfile builds with Maven Wrapper and runs as a non-root user in a lightweight JRE image.
+- Passwords are hashed with BCrypt; raw passwords are never stored.
+- JWT authentication is used for stateless API security.
+- Production secrets and database credentials are provided through environment variables.
+- CORS is configurable for deployed frontend origins.
+- Real `.env` files are ignored, while `.env.example` files document required configuration.
+- Password reset tokens are securely generated, hashed before storage, and expire automatically.
+- The backend is containerized with Docker and runs as a non-root user.
 
 ## Running Locally
 
