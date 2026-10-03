@@ -4,16 +4,9 @@ Grocery App is a full-stack household grocery list application for creating shar
 
 ## Live Demo
 
-A public deployment URL is not currently committed in this repository.
+**[Try Grocery App](https://grocery-app-ivory-rho.vercel.app/)**
 
-When deployed, this project is intended to use:
-
-- Frontend: Vercel
-- Backend: Render
-- Database: Neon PostgreSQL
-- Source/deployment trigger: GitHub repository
-
-Add the live frontend URL here after deployment.
+The frontend is deployed on Vercel, the Spring Boot backend is deployed on Render, and PostgreSQL is hosted on Neon.
 
 ## Main Preview
 
