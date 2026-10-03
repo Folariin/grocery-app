@@ -7,6 +7,8 @@ export default function Household() {
   const nav = useNavigate();
   const { householdId } = useParams();
 
+  const [household, setHousehold] = useState(null);
+  const [householdLoading, setHouseholdLoading] = useState(true);
   const [lists, setLists] = useState([]);
   const [members, setMembers] = useState([]);
   const [membersLoading, setMembersLoading] = useState(true);
@@ -20,6 +22,18 @@ export default function Household() {
   // Load household details
   useEffect(() => {
     let ignore = false;
+
+    async function fetchHousehold() {
+      setHouseholdLoading(true);
+      try {
+        const res = await api.get(`/api/households/${householdId}`);
+        if (!ignore) setHousehold(res.data);
+      } catch {
+        if (!ignore) setErr("Could not load household details.");
+      } finally {
+        if (!ignore) setHouseholdLoading(false);
+      }
+    }
 
     async function fetchLists() {
       setErr("");
@@ -44,6 +58,7 @@ export default function Household() {
       }
     }
 
+    fetchHousehold();
     fetchLists();
     fetchMembers();
     return () => {
@@ -101,7 +116,9 @@ export default function Household() {
             </button>
             <div>
               <h2>Grocery Lists</h2>
-              <div className="muted">Household: {householdId}</div>
+              <div className="muted">
+                {householdLoading ? "Loading household..." : household?.name || "Household"}
+              </div>
             </div>
           </div>
 
