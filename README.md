@@ -214,15 +214,9 @@ npm run build
 
 The backend intentionally lives at `backend/backend`; the current setup commands and Dockerfile assume that structure.
 
-## Deployment Notes
+## Deployment
 
-- Create the PostgreSQL database first, then deploy the backend, then deploy the frontend.
-- Set backend env vars from `backend/backend/.env.example` in Render or the selected backend host.
-- Set `APP_ENV=production` for production backend deployments.
-- Set `APP_CORS_ALLOWED_ORIGINS` to the deployed frontend origin.
-- Set `SPRING_JPA_HIBERNATE_DDL_AUTO=validate` after the schema exists.
-- Set a real 32+ character `JWT_SECRET`; do not use placeholders.
-- If password reset email is not ready, set `PASSWORD_RESET_DELIVERY_MODE=disabled` in production.
-- Use `PASSWORD_RESET_DELIVERY_MODE=resend` only after setting `RESEND_API_KEY`, `RESEND_FROM_EMAIL`, and a verified Resend sender/domain.
-- Set frontend `VITE_API_BASE_URL` to the deployed backend URL before building on Vercel.
-- Configure the frontend host to serve `index.html` for client-side routes such as `/login`, `/dashboard`, `/invites`, and `/reset-password`.
+- Frontend: Vercel
+- Backend: Render using the backend Dockerfile
+- Database: Neon PostgreSQL
+- Production configuration is managed through environment variables.
