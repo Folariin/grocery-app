@@ -41,7 +41,7 @@ export default function Login() {
     } catch (error) {
       if (controller.signal.aborted) return;
       setErr(loginErrorMessage(error));
-      setRetry(!error?.response || error.response.status >= 500);
+      setRetry(true);
     } finally {
       clearTimeout(reveal);
       if (active.current === controller) active.current = null;

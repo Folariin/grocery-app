@@ -1,4 +1,4 @@
-export const LOGIN_TIMEOUT_MS = 120000;
+export const LOGIN_TIMEOUT_MS = 240000;
 
 // Share an in-flight request so rapid submissions cannot resend credentials.
 export function createLoginRequest(client) {
