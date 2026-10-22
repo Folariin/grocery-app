@@ -1,3 +1,14 @@
+.auth-card .login-connection {
+  padding: 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--primary-soft);
+  color: var(--primary-dark);
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+.login-connection p { margin: 6px 0 0; }
+
 .auth-wrap {
   min-height: 100vh;
   display: grid;
@@ -142,3 +153,4 @@
     font-size: 30px;
   }
 }
+
